@@ -38,9 +38,43 @@ app.get('/getVeicoli', function(req, res) {
             res.send(result);
             db.close();
         });
-
     });
+})
 
+
+
+/* NOLEGGIA */
+
+app.get('/getRental', function(req, res) {
+
+    /*
+        DA SISTEMARE || FINIREEEE
+        DA SISTEMARE || FINIREEEE
+        DA SISTEMARE || FINIREEEE
+        DA SISTEMARE || FINIREEEE
+        DA SISTEMARE || FINIREEEE
+        DA SISTEMARE || FINIREEEE
+        DA SISTEMARE || FINIREEEE
+        DA SISTEMARE || FINIREEEE
+    */
+
+    console.log('NOLEGGIA');
+
+    MongoClient.connect('mongodb+srv://admin:admin@database-zsqmz.mongodb.net/test?retryWrites=true', function(err, db) {
+        if (err) {
+            throw err;
+        }
+        var dbo = db.db("MonoElettrici");
+        dbo.collection("veicoli").updateOne({ tag: }).toArray(function(err, result) {
+            if (err) {
+                //console.log(JSON.stringify(result))
+                throw err;
+            }
+            //console.log(result)
+            res.send(result);
+            db.close();
+        });
+    });
 })
 
 
