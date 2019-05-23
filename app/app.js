@@ -60,18 +60,22 @@ app.get('/getRental', function(req, res) {
 
     console.log('NOLEGGIA');
 
+    /*var user = req.body.state;
+    var user = req.body.date;
+    var user = req.body.time;*/
+
     MongoClient.connect('mongodb+srv://admin:admin@database-zsqmz.mongodb.net/test?retryWrites=true', function(err, db) {
         if (err) {
             throw err;
         }
         var dbo = db.db("MonoElettrici");
-        dbo.collection("veicoli").updateOne({ tag: }).toArray(function(err, result) {
+        dbo.collection("veicoli").updateOne({ tag: req.body.tag }, {$set: { state: true }} ).toArray(function(err, result) {
             if (err) {
-                //console.log(JSON.stringify(result))
+                console.log(result)
                 throw err;
             }
-            //console.log(result)
-            res.send(result);
+            console.log(result)
+            //res.send(result);
             db.close();
         });
     });
