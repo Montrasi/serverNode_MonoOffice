@@ -28,8 +28,8 @@ app.get('/getVeicoli', function(req, res) {
         if (err) {
             throw err;
         }
-        var dbo = db.db("MonoElettrici");
-        dbo.collection("veicoli").find({}).toArray(function(err, result) {
+        var dbo = db.db('MonoElettrici');
+        dbo.collection('veicoli').find({}).toArray(function(err, result) {
             if (err) {
                 //console.log(JSON.stringify(result))
                 throw err;
@@ -47,11 +47,7 @@ app.get('/getVeicoli', function(req, res) {
 
 app.post('/getRental', function(req, res) {
 
-    console.log('il tag è: ' + req.body.tag);
-
-    /*var user = req.body.state;
-    var user = req.body.date;
-    var user = req.body.time;*/
+    //console.log('il tag è: ' + req.body.tag);
 
 
     if (req.body.state == false) {
@@ -62,23 +58,17 @@ app.post('/getRental', function(req, res) {
             if (err) {
                 throw err;
             }
-            var dbo = db.db("MonoElettrici");
-            dbo.collection("veicoli").updateOne({ tag: req.body.tag }, { $set: { state: true } }).then((result) => {
-                if (err) {
-                    console.log('NO FUNZICA')
-                    throw err;
-                }
+            var dbo = db.db('MonoElettrici');
+            dbo.collection('veicoli').updateOne({ tag: req.body.tag }, { $set: { state: true } }).then((result) => {
+                if (err) throw err;
                 console.log('FUNZICA')
                 db.close();
             });
 
-            dbo.collection("noleggio").insertOne({ tag: req.body.tag, user: req.body.user, date: req.body.date, time: req.body.time }, function(err, result) {
-                if (err) {
-                    //console.log(JSON.stringify(result))
-                    throw err;
-                }
-                console.log(JSON.stringify(result))
-                //res.send(result);
+            dbo.collection('noleggio').insertOne({ tag: req.body.tag, user: req.body.user, date: req.body.date, time: req.body.time }, function(err, result) {
+                if (err) throw err;
+                console.log('il monopattino con il tag: ' + req.body.tag + ' è stato noleggiato')
+                res.send(true);
                 db.close();
             })
         })
@@ -91,40 +81,32 @@ app.post('/getRental', function(req, res) {
             if (err) {
                 throw err;
             }
-            var dbo = db.db("MonoElettrici");
-            dbo.collection("veicoli").updateOne({ tag: req.body.tag }, { $set: { state: false } }).then((result) => {
-                if (err) {
-                    console.log('NO FUNZICA')
-                    throw err;
-                }
-                console.log('FUNZICA')
+            var dbo = db.db('MonoElettrici');
+
+            dbo.collection('veicoli').updateOne({ tag: req.body.tag }, { $set: { state: false } }, function(err, res) {
+                if (err) throw err;
+                console.log('FUNZICA UPDATE')
                 db.close();
             });
 
 
-
-            dbo.collection("noleggio").find({}, function(err, result) {
-                if (err) {
-                    //console.log(JSON.stringify(result))
-                    throw err;
-                }
-                console.log(result)
-                Results = result;
+            dbo.collection('noleggio').find({ tag: req.body.tag }, function(err, result) {
+                if (err) throw err;
+                //console.log(result)
+                //Results = result;
+                console.log('FUNZICA FIND');
                 db.close();
             })
 
 
 
-            dbo.collection("noleggio").deleteOne({ tag: req.body.tag }, function(err, result) {
-                if (err) {
-                    //console.log(JSON.stringify(result))
-                    throw err;
-                }
-                console.log(result)
+            /*dbo.collection('noleggio').deleteOne({ tag: req.body.tag }, function(err, obj) {
+                if (err) throw err;
+                console.log('FUNZICA DELETE');
                 db.close();
-            })
-
-            res.send(Resultss);
+            });*/
+            //res.send(Resultss);
+            //res.send('ok');
 
         })
 
