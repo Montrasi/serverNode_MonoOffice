@@ -49,8 +49,7 @@ app.post('/getRental', function(req, res) {
 
     //console.log('il tag è: ' + req.body.tag);
 
-
-    if (req.body.state == false) {
+    if (req.body.state == true) {
 
         console.log('NOLEGGIA');
 
@@ -59,7 +58,7 @@ app.post('/getRental', function(req, res) {
                 throw err;
             }
             var dbo = db.db('MonoElettrici');
-            dbo.collection('veicoli').updateOne({ tag: req.body.tag }, { $set: { state: true } }).then((result) => {
+            dbo.collection('veicoli').updateOne({ tag: req.body.tag }, { $set: { state: true, stateVhc: req.body.stateVhc } }).then((result) => {
                 if (err) throw err;
                 console.log('FUNZICA')
                 db.close();
@@ -68,7 +67,6 @@ app.post('/getRental', function(req, res) {
             dbo.collection('noleggio').insertOne({ tag: req.body.tag, user: req.body.user, date: req.body.date, time: req.body.time }, function(err, result) {
                 if (err) throw err;
                 console.log('il monopattino con il tag: ' + req.body.tag + ' è stato noleggiato')
-                res.send(true);
                 db.close();
             })
         })
@@ -83,30 +81,27 @@ app.post('/getRental', function(req, res) {
             }
             var dbo = db.db('MonoElettrici');
 
-            dbo.collection('veicoli').updateOne({ tag: req.body.tag }, { $set: { state: false } }, function(err, res) {
+            dbo.collection('veicoli').updateOne({ tag: req.body.tag }, { $set: { state: false, stateVhc: req.body.stateVhc } }, function(err, res) {
                 if (err) throw err;
                 console.log('FUNZICA UPDATE')
                 db.close();
             });
 
 
-            dbo.collection('noleggio').find({ tag: req.body.tag }, function(err, result) {
+            dbo.collection('noleggio').find({ tag: req.body.tag }) .toArray(function(err, result) {
                 if (err) throw err;
                 //console.log(result)
-                //Results = result;
+                res.send(result);
                 console.log('FUNZICA FIND');
                 db.close();
             })
 
-
-
-            /*dbo.collection('noleggio').deleteOne({ tag: req.body.tag }, function(err, obj) {
+            dbo.collection('noleggio').deleteOne({ tag: req.body.tag }, function(err, obj) {
                 if (err) throw err;
                 console.log('FUNZICA DELETE');
                 db.close();
-            });*/
-            //res.send(Resultss);
-            //res.send('ok');
+            });
+
 
         })
 
@@ -115,5 +110,5 @@ app.post('/getRental', function(req, res) {
 
 
 
-app.listen(3000, () => console.log('Example app listening on port 3000!'))
+app.listen(4000, () => console.log('Example app listening on port 3000!'))
 
