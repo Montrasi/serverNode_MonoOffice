@@ -87,6 +87,12 @@ app.post('/getRental', function(req, res) {
                 db.close();
             });
 
+            var temp = new Date();
+            var currentDayTimes = temp.toLocaleString().split(',')
+
+
+
+            console.log(currentDayTimes);
 
             dbo.collection('noleggio').find({ tag: req.body.tag }) .toArray(function(err, result) {
                 if (err) throw err;
